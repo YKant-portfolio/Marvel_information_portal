@@ -10,26 +10,25 @@ class RandomChar extends Component {
 	}
 
 	state = {
-		name: null,
-		description: null,
-		thumbnail: null,
-		homepage: null,
-		wiki: null,
+		char: {}
 	}
 
 	marvelSevice = new MarvelSevice();
 
+	onChatLoaded = (char) => {
+		this.setState({ char })
+	}
 
 	updateChar = () => {
 		const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
 		this.marvelSevice
 			.getCharacter(id)
-			.then(res => this.setState(res))
+			.then(this.onChatLoaded)
 
 	}
 
 	render() {
-		const { name, description, thumbnail, homepage, wiki } = this.state;
+		const { char: { name, description, thumbnail, homepage, wiki } } = this.state;
 		return (
 			<div className="randomchar" >
 				<div className="randomchar__block">
