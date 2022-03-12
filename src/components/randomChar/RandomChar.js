@@ -16,15 +16,23 @@ class RandomChar extends Component {
 	marvelSevice = new MarvelSevice();
 
 	onChatLoaded = (char) => {
+		if (!char.description) {
+			char.description = "Описание отсутствует"
+		}
+		else if (char.description.length >= 210) {
+			char.description = char.description.slice(0, 210) + ' ...';
+		}
 		this.setState({ char })
 	}
 
 	updateChar = () => {
-		const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
+		// const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
+		const id = 1011006;
+		console.log(id);
+
 		this.marvelSevice
 			.getCharacter(id)
 			.then(this.onChatLoaded)
-
 	}
 
 	render() {
