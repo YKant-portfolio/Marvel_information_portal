@@ -1,5 +1,6 @@
 import { Component } from 'react/cjs/react.production.min';
 import Spinner from '../spinner/Spinner';
+import ErrorMessage from '../errorMessage/ErrorMessage'
 import './randomChar.scss';
 import MarvelSevice from '../../services/MarvelSevice';
 import mjolnir from '../../resources/img/mjolnir.png';
@@ -7,15 +8,28 @@ import mjolnir from '../../resources/img/mjolnir.png';
 class RandomChar extends Component {
 	constructor(props) {
 		super(props);
-		this.updateChar();
+		// this.updateChar();
+		console.log('constructor');
+
 	}
 
 	state = {
 		char: {},
 		loading: true,
+		error: false,
 	}
 
 	marvelSevice = new MarvelSevice();
+
+	componentDidMount() {
+		// this.updateChar();
+		console.log('Mount');
+	}
+
+	componentWillUnmount() {
+		console.log('unmount');
+
+	}
 
 	onChatLoaded = (char) => {
 		if (!char.description) {
@@ -27,22 +41,37 @@ class RandomChar extends Component {
 		this.setState({ char, loading: false })
 	}
 
+	onError = () => {
+		this.setState({
+			loading: false,
+			error: true,
+		})
+	}
+
 	updateChar = () => {
 		const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
 		// const id = 1011006;
-		console.log(id);
+		// console.log(id);
 
 		this.marvelSevice
 			.getCharacter(id)
 			.then(this.onChatLoaded)
+			.catch(this.onError);
 	}
 
 	render() {
-		const { char, loading } = this.state;
+		console.log('render');
+
+		const { char, loading, error } = this.state;
+		const errorMessage = error ? <ErrorMessage /> : null;
+		const spinner = loading ? <Spinner /> : null;
+		const content = !(error || loading) ? <View char={char} /> : null;
 
 		return (
 			<div className="randomchar" >
-				{loading ? <Spinner /> : <View char={char} />}
+				{errorMessage}
+				{spinner}
+				{content}
 				<div className="randomchar__static">
 					<p className="randomchar__title">
 						Random character for today!<br />
@@ -59,7 +88,6 @@ class RandomChar extends Component {
 			</div>
 		)
 	}
-
 }
 
 const View = ({ char }) => {
