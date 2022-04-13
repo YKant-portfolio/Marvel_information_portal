@@ -1,4 +1,6 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import MarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -43,8 +45,6 @@ class CharInfo extends Component {
 			loading: false,
 			error: false
 		})
-		// console.log(char);
-
 	}
 
 	onCharLoading = () => {
@@ -79,7 +79,6 @@ class CharInfo extends Component {
 
 const View = ({ char }) => {
 	const { name, description, thumbnail, homepage, wiki, comics } = char;
-	// console.log(comics);
 	// if (comics.length > 14) {
 	// 	comics.splice(14);
 	// }
@@ -121,6 +120,10 @@ const View = ({ char }) => {
 			</ul>
 		</>
 	)
+}
+
+CharInfo.propTypes = {
+	charId: PropTypes.number,
 }
 
 export default CharInfo;
